@@ -1,0 +1,6 @@
+.idea
+node_modules
+dist
+
+/tests/cypress/videos/
+/tests/cypress/screenshots/
