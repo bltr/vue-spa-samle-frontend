@@ -1,9 +1,12 @@
+import store from '@/js/store'
+import LogoutButton from "@/components/layouts/base/LogoutButton.vue"
+
 describe('LogoutButton', () => {
   beforeEach(() => {
-    cy.COMPONENT_LOAD('layouts/base/LogoutButton')
+    cy.mount(LogoutButton)
     cy.contains('button', 'logout')
 
-    cy.STORE_LOGIN()
+    store.commit('login', 'access_token')
     cy.intercept(
       'POST',
       '/api/auth/logout',
@@ -12,9 +15,7 @@ describe('LogoutButton', () => {
         body: {}
       }
     ).as('logout')
-    cy.COMPONENT().then(component => {
-      // let routerReplaceStub = cy.stub(component.$router, 'replace')
-    })
+    // let routerReplaceStub = cy.stub(component.$router, 'replace')
   })
 
   it('send logout request', () => {
@@ -32,7 +33,7 @@ describe('LogoutButton', () => {
   it('reset store state', () => {
     cy.get('button').click()
     cy.wait('@logout').then(() => {
-      cy.STORE().its('auth.access_token').should('be.null')
+      expect(store.state.auth.access_token).equal(null)
     })
   })
 })

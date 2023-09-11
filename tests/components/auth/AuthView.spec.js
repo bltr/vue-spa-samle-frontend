@@ -1,6 +1,8 @@
+import AuthView from "@/components/auth/AuthView.vue"
+
 describe('AuthView', () => {
   before(() => {
-    cy.COMPONENT_LOAD('auth/AuthView')
+    cy.mount(AuthView)
     cy.contains('h1', 'DenegUchet')
     cy.contains('p', 'personal finance accounting service')
     cy.contains('button', 'login').should('have.attr', 'disabled')
@@ -8,7 +10,7 @@ describe('AuthView', () => {
     cy.get('form[data-cy="login-form"]')
   })
 
-  beforeEach(() => cy.COMPONENT_LOAD('auth/AuthView'))
+  beforeEach(() => cy.mount(AuthView))
   it(`display register form when click on "register"`, () => {
     cy.contains('button', 'register').click()
     cy.get('form[data-cy="register-form"]')

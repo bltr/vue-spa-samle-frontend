@@ -1,3 +1,7 @@
+import store from "@/js/store"
+import router from '@/js/router'
+import RegisterForm from "@/components/auth/RegisterForm.vue"
+
 describe('RegisterForm', () => {
   const registerButton = '[data-cy="register-button"]'
   const emailFeedback = '[data-cy="email-feedback"]'
@@ -14,7 +18,7 @@ describe('RegisterForm', () => {
   const pwcNotMatch = 'Password confirmation does not match'
 
   before(() => {
-    cy.COMPONENT_LOAD('auth/RegisterForm')
+    cy.mount(RegisterForm)
     cy.contains('label[for="email"]', 'email')
     cy.contains('label[for="password"]', 'password')
     cy.contains('label[for="password_confirmation"]', 'password confirmation')
@@ -23,10 +27,8 @@ describe('RegisterForm', () => {
   let routerPushStub
 
   beforeEach(() => {
-    cy.COMPONENT_LOAD('auth/RegisterForm')
-    cy.COMPONENT().then(component => {
-      routerPushStub = cy.stub(component.$router, 'push')
-    })
+    cy.mount(RegisterForm)
+    routerPushStub = cy.stub(router, 'push')
   })
 
   context('validation', () => {
@@ -109,13 +111,10 @@ describe('RegisterForm', () => {
     const response = {access_token}
 
     function register() {
-      cy.COMPONENT().then(component => {
-        // interacting with internal implementation - a compromise for speed
-        component.$data.form.email = 'admin@mail.com'
-        component.$data.form.password = 'password'
-        component.$data.form.password_confirmation = 'password'
-        component.register()
-      })
+      cy.get(emailInput).type('admin@mail.com')
+      cy.get(pwInput).type('password')
+      cy.get(pwcInput).type('password')
+      cy.get(registerButton).click()
     }
 
     it('with correct data: set token in store', () => {
@@ -129,7 +128,7 @@ describe('RegisterForm', () => {
       ).as('register')
       register()
       cy.wait('@register').then(() => {
-        cy.STORE().its('auth.access_token').should('equal', access_token)
+        expect(store.state.auth.access_token).equal(access_token)
       })
     })
 

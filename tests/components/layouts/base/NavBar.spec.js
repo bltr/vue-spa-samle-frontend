@@ -1,7 +1,10 @@
+import Navbar from "@/components/layouts/base/Navbar.vue"
+
 describe('NavBar', () => {
-  beforeEach(() => cy.COMPONENT_LOAD('layouts/base/NavBar'))
+  beforeEach(() => cy.mount(Navbar))
 
   context('md', () => {
+    beforeEach(() => cy.viewport(1024, 660))
     it('have visible navbar-collapse', () => {
       cy.get('[data-cy="navbar-collapse"]').should('be.visible')
     })

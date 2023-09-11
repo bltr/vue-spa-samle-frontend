@@ -1,5 +1,5 @@
 const {defineConfig} = require("cypress");
-const webpackConfig = require('./webpack/webpack.dev.config')
+const webpackConfig = require("./webpack/webpack.dev.config");
 
 module.exports = defineConfig({
   nodeVersion: "system",
@@ -16,17 +16,18 @@ module.exports = defineConfig({
       return require("./tests/plugins/index.js")(on, config);
     },
     baseUrl: "http://127.0.0.1:8081",
-    specPattern: "tests/specs/**/*.spec.js",
-    supportFile: "tests/support/index.js",
+    specPattern: "tests/feature/**/*.spec.js",
+    supportFile: "tests/feature/support/index.js",
   },
 
-  // component: {
-  //   devServer: {
-  //     framework: "vue",
-  //     bundler: "webpack",
-  //     webpackConfig
-  //   },
-  //   specPattern: "tests/specs/**/*.spec.js",
-  //   supportFile: "tests/support/index.js"
-  // },
+  component: {
+    devServer: {
+      framework: "vue",
+      bundler: "webpack",
+      webpackConfig
+    },
+    specPattern: "tests/components/**/*.spec.js",
+    supportFile: "tests/components/support/index.js",
+    indexHtmlFile: "tests/components/support/index.html",
+  },
 });

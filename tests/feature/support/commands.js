@@ -24,15 +24,6 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-Cypress.Commands.overwrite('route', (route, options) => {
-  Cypress.log()
-
-  if (Cypress.env('e2e')) {
-    delete options.response
-  }
-  return route(options)
-})
-
 Cypress.Commands.add('CREATE', (model, amount, attributes) => {
   Cypress.log()
 
@@ -84,42 +75,6 @@ Cypress.Commands.add('LOGIN', (attributes) => {
   }
 })
 
-Cypress.Commands.add('COMPONENT_LOAD', (component) => {
-  Cypress.log()
-
-  cy.visit('/test/' + component, {log: false})
-})
-
-Cypress.Commands.add('STORE_LOGIN', () => {
-  Cypress.log()
-
-  cy.window({log: false}).then(w => {
-    w.top.app.$store.commit('login', 'access_token')
-  })
-})
-
-Cypress.Commands.add('STORE_LOGOUT', () => {
-  Cypress.log()
-
-  cy.window({log: false}).then(w => {
-    // w.top.app.reset()
-    w.top.app.$store.commit('logout')
-  })
-})
-
-Cypress.Commands.add('STORE', () => {
-  Cypress.log()
-
-  return cy.window({log: false}).then(w => {
-    return w.top.app.$store.state
-  })
-})
-
-Cypress.Commands.add('COMPONENT', () => {
-  return cy.window({log: false}).then(w => {
-    return w.top.app.$children[0]
-  })
-})
 Cypress.Commands.add('INTERCEPT', (method, url, request, alias) => {
   let i;
   if (Cypress.env('e2e')) {

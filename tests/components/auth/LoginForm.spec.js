@@ -1,3 +1,6 @@
+import store from "@/js/store"
+import LoginForm from "@/components/auth/LoginForm.vue";
+
 describe('LoginForm', () => {
   const loginButton = '[data-cy="login-button"]'
   const emailFeedback = '[data-cy="email-feedback"]'
@@ -9,12 +12,12 @@ describe('LoginForm', () => {
   const pwRequired = 'Password is required'
 
   before(() => {
-    cy.COMPONENT_LOAD('auth/LoginForm')
+    cy.mount(LoginForm)
     cy.contains('label[for="email"]', 'email')
     cy.contains('label[for="password"]', 'password')
   })
 
-  beforeEach(() => cy.COMPONENT_LOAD('auth/LoginForm'))
+  beforeEach(() => cy.mount(LoginForm))
 
   context('validation', () => {
     it('require email', () => {
@@ -64,12 +67,9 @@ describe('LoginForm', () => {
     const response = {access_token}
 
     function login() {
-      cy.COMPONENT().then(component => {
-        // interacting with internal implementation - a compromise for speed
-        component.$data.form.email = 'admin@mail.com'
-        component.$data.form.password = 'password'
-        component.login()
-      })
+      cy.get(emailInput).type('admin@mail.com')
+      cy.get(pwInput).type('password')
+      cy.get(loginButton).click()
     }
 
     it('with correct credentials: set token in store', () => {
@@ -83,7 +83,7 @@ describe('LoginForm', () => {
       ).as('login')
       login()
       cy.wait('@login').then(() => {
-        cy.STORE().its('auth.access_token').should('equal', access_token)
+        expect(store.state.auth.access_token).equal(access_token)
       })
     })
 

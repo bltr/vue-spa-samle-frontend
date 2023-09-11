@@ -7,10 +7,6 @@ baseWebpackConfig.module.rules[0].use.unshift('vue-style-loader')
 module.exports = merge(baseWebpackConfig, {
   mode: 'development',
 
-  entry: {
-    test: './tests/testStand/index.js'
-  },
-
   devServer: {
     historyApiFallback: {
       rewrites: [

@@ -1,6 +1,8 @@
+import BaseLayout from "@/components/layouts/base/BaseLayout.vue"
+
 describe('BaseLayout', () => {
   it('contains', () => {
-    cy.COMPONENT_LOAD('layouts/base/BaseLayout')
+    cy.mount(BaseLayout)
     cy.get('[data-cy="navbar"]')
   })
 })

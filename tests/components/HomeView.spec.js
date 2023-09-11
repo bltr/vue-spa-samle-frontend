@@ -1,5 +1,8 @@
+import store from '@/js/store'
+import HomeView from "@/components/HomeView.vue"
+
 describe('HomeView', () => {
-  beforeEach(() => cy.COMPONENT_LOAD('HomeView'))
+  beforeEach(() => cy.mount(HomeView))
 
   // context('when created', () => {
   //   it('emit "update:layout" with div if not authenticated', () => {
@@ -47,12 +50,12 @@ describe('HomeView', () => {
 
   context('show', () => {
     it('AuthView when not authenticated', () => {
-      cy.STORE_LOGOUT()
+      store.commit('logout')
       cy.get('[data-cy="auth-view"]')
     })
 
     it('DashboardView when authenticated', () => {
-      cy.STORE_LOGIN()
+      store.commit('login', 'access_token')
       cy.get('[data-cy="dashboard-view"]')
     })
   })

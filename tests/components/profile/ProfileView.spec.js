@@ -1,3 +1,5 @@
+import ProfileView from "@/components/profile/ProfileView.vue"
+
 describe('ProfileView', () => {
   const email = 'admin@mail.com'
 
@@ -10,7 +12,7 @@ describe('ProfileView', () => {
         body: {email}
       }
     ).as('user')
-    cy.COMPONENT_LOAD('profile/ProfileView')
+    cy.mount(ProfileView)
     cy.contains('h1', 'profile')
   })
 
