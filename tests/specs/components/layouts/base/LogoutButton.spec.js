@@ -1,16 +1,19 @@
 describe('LogoutButton', () => {
-  before(() => {
+  beforeEach(() => {
     cy.COMPONENT_LOAD('layouts/base/LogoutButton')
     cy.contains('button', 'logout')
-  })
 
-  let routerReplaceStub
-  beforeEach(() => {
     cy.STORE_LOGIN()
-    cy.server()
-    cy.route({method: 'POST', url: '/api/auth/logout', response: {}}).as('logout')
+    cy.intercept(
+      'POST',
+      '/api/auth/logout',
+      {
+        statusCode: 200,
+        body: {}
+      }
+    ).as('logout')
     cy.COMPONENT().then(component => {
-      routerReplaceStub = cy.stub(component.$router, 'replace')
+      // let routerReplaceStub = cy.stub(component.$router, 'replace')
     })
   })
 
@@ -29,7 +32,7 @@ describe('LogoutButton', () => {
   it('reset store state', () => {
     cy.get('button').click()
     cy.wait('@logout').then(() => {
-      cy.STORE().its('auth.access_token').should('equal', null)
+      cy.STORE().its('auth.access_token').should('be.null')
     })
   })
 })

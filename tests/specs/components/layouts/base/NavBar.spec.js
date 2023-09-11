@@ -1,5 +1,5 @@
 describe('NavBar', () => {
-  before(() => cy.COMPONENT_LOAD('layouts/base/NavBar'))
+  beforeEach(() => cy.COMPONENT_LOAD('layouts/base/NavBar'))
 
   context('md', () => {
     it('have visible navbar-collapse', () => {

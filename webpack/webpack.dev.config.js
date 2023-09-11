@@ -1,5 +1,5 @@
 const HtmlWebPlugin = require('html-webpack-plugin')
-const merge = require('webpack-merge')
+const {merge} = require('webpack-merge')
 const baseWebpackConfig = require('./webpack.base.config')
 
 baseWebpackConfig.module.rules[0].use.unshift('vue-style-loader')
@@ -17,7 +17,6 @@ module.exports = merge(baseWebpackConfig, {
         {from: /^\/test/, to: '/test/index.html'},
       ]
     },
-    overlay: true,
     port: 8081,
     hot: true,
     proxy: {

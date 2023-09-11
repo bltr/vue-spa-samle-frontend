@@ -90,19 +90,11 @@ Cypress.Commands.add('COMPONENT_LOAD', (component) => {
   cy.visit('/test/' + component, {log: false})
 })
 
-Cypress.Commands.add('COMPONENT_RESET', () => {
-  Cypress.log()
-
-  cy.window({log: false}).then(w => {
-    w.app.reset()
-  })
-})
-
 Cypress.Commands.add('STORE_LOGIN', () => {
   Cypress.log()
 
   cy.window({log: false}).then(w => {
-    w.app.$store.commit('login', 'access_token')
+    w.top.app.$store.commit('login', 'access_token')
   })
 })
 
@@ -110,8 +102,8 @@ Cypress.Commands.add('STORE_LOGOUT', () => {
   Cypress.log()
 
   cy.window({log: false}).then(w => {
-    w.app.reset()
-    w.app.$store.commit('logout')
+    // w.top.app.reset()
+    w.top.app.$store.commit('logout')
   })
 })
 
@@ -119,12 +111,31 @@ Cypress.Commands.add('STORE', () => {
   Cypress.log()
 
   return cy.window({log: false}).then(w => {
-    return w.app.$store.state
+    return w.top.app.$store.state
   })
 })
 
 Cypress.Commands.add('COMPONENT', () => {
   return cy.window({log: false}).then(w => {
-    return w.app.$children[0]
+    return w.top.app.$children[0]
   })
+})
+Cypress.Commands.add('INTERCEPT', (method, url, request, alias) => {
+  let i;
+  if (Cypress.env('e2e')) {
+    i = cy.intercept(
+      method,
+      url
+    )
+  } else {
+    i = cy.intercept(
+      method,
+      url,
+      request
+    )
+  }
+
+  if (alias) {
+    i.as(alias)
+  }
 })

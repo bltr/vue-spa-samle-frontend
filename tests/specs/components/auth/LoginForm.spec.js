@@ -14,7 +14,7 @@ describe('LoginForm', () => {
     cy.contains('label[for="password"]', 'password')
   })
 
-  beforeEach(() => cy.COMPONENT_RESET())
+  beforeEach(() => cy.COMPONENT_LOAD('auth/LoginForm'))
 
   context('validation', () => {
     it('require email', () => {
@@ -72,15 +72,15 @@ describe('LoginForm', () => {
       })
     }
 
-    beforeEach(() => {
-      cy.server({
-        method: 'POST',
-        url: '/api/auth/login'
-      })
-    })
-
     it('with correct credentials: set token in store', () => {
-      cy.route({response}).as('login')
+      cy.intercept(
+        'POST',
+        '/api/auth/login',
+        {
+          statusCode: 200,
+          body: response
+        }
+      ).as('login')
       login()
       cy.wait('@login').then(() => {
         cy.STORE().its('auth.access_token').should('equal', access_token)
@@ -88,28 +88,56 @@ describe('LoginForm', () => {
     })
 
     it('with incorrect credentials: show alert', () => {
-      cy.route({status: 401, response: {}}).as('login')
+      cy.intercept(
+        'POST',
+        '/api/auth/login',
+        {
+          statusCode: 401,
+          body: {}
+        }
+      ).as('login')
       login()
       cy.wait('@login')
       cy.contains('[data-cy="alert"]', 'These credentials do not match our records')
     })
 
     it('show alert when occurred internal api error', () => {
-      cy.route({status: 500, response: {}}).as('login')
+      cy.intercept(
+        'POST',
+        '/api/auth/login',
+        {
+          statusCode: 500,
+          body: {}
+        }
+      ).as('login')
       login()
       cy.wait('@login')
       cy.contains('[data-cy="alert"]', 'Internal error')
     })
 
     it('disable login button and have spinner', () => {
-      cy.route({response})
+      cy.intercept(
+        'POST',
+        '/api/auth/login',
+        {
+          statusCode: 200,
+          body: response
+        }
+      ).as('login')
       login()
       cy.get(loginButton).should('have.attr', 'disabled')
       cy.get(loginButton + ' [data-cy="login-spinner"]')
     })
 
     it('enable login button and hide spinner when login failed', () => {
-      cy.route({status: 401, response: {}}).as('login')
+      cy.intercept(
+        'POST',
+        '/api/auth/login',
+        {
+          statusCode: 401,
+          body: {}
+        }
+      ).as('login')
       login()
       cy.wait('@login')
       cy.get(loginButton).should('not.have.attr', 'disabled')

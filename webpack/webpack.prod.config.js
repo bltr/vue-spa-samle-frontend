@@ -1,10 +1,10 @@
-const merge = require('webpack-merge')
+const {merge} = require('webpack-merge')
 const path = require('path')
 const glob = require('glob')
 const MiniCssExtactPlugin = require('mini-css-extract-plugin')
 const baseWebpackConfig = require('./webpack.base.config')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
-const PurgecssPlugin = require('purgecss-webpack-plugin');
+const {PurgeCSSPlugin} = require('purgecss-webpack-plugin');
 
 baseWebpackConfig.module.rules[0].use.unshift(MiniCssExtactPlugin.loader)
 
@@ -31,7 +31,7 @@ module.exports = merge(baseWebpackConfig, {
   },
 
   plugins: [
-    new PurgecssPlugin({
+    new PurgeCSSPlugin({
       paths: glob.sync(path.resolve(__dirname, '../src/**/*'), {nodir: true})
     }),
     new MiniCssExtactPlugin({

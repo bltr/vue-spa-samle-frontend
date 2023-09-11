@@ -10,16 +10,19 @@ describe('profile', () => {
   it('it show user info', () => {
     cy.RESET()
     cy.LOGIN({email})
-    cy.server()
-    cy.route({
-      method: 'GET',
-      url: '/api/auth/user',
-      response: {email}
-    }).as('user')
+    cy.INTERCEPT(
+      'GET',
+      '/api/auth/user',
+      {
+        statusCode: 200,
+        body: {email}
+      },
+      'user'
+    )
 
     cy.visit('/profile')
     cy.wait('@user').then(xhr => {
-      expect(xhr.responseBody).to.contain({email})
+      expect(xhr.response.body).to.contain({email})
     })
     cy.contains(email)
   })

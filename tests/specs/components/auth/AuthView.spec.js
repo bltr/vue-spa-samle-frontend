@@ -8,7 +8,7 @@ describe('AuthView', () => {
     cy.get('form[data-cy="login-form"]')
   })
 
-  beforeEach(() => cy.COMPONENT_RESET())
+  beforeEach(() => cy.COMPONENT_LOAD('auth/AuthView'))
   it(`display register form when click on "register"`, () => {
     cy.contains('button', 'register').click()
     cy.get('form[data-cy="register-form"]')

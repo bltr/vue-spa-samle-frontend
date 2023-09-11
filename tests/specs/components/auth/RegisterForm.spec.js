@@ -23,7 +23,7 @@ describe('RegisterForm', () => {
   let routerPushStub
 
   beforeEach(() => {
-    cy.COMPONENT_RESET()
+    cy.COMPONENT_LOAD('auth/RegisterForm')
     cy.COMPONENT().then(component => {
       routerPushStub = cy.stub(component.$router, 'push')
     })
@@ -118,15 +118,15 @@ describe('RegisterForm', () => {
       })
     }
 
-    beforeEach(() => {
-      cy.server({
-        method: 'POST',
-        url: '/api/auth/register'
-      })
-    })
-
     it('with correct data: set token in store', () => {
-      cy.route({response}).as('register')
+      cy.intercept(
+        'POST',
+        '/api/auth/register',
+        {
+          statusCode: 200,
+          body: response
+        }
+      ).as('register')
       register()
       cy.wait('@register').then(() => {
         cy.STORE().its('auth.access_token').should('equal', access_token)
@@ -134,7 +134,14 @@ describe('RegisterForm', () => {
     })
 
     it('with correct data: navigate to "/profile"', () => {
-      cy.route({response}).as('register')
+      cy.intercept(
+        'POST',
+        '/api/auth/register',
+        {
+          statusCode: 200,
+          body: response
+        }
+      ).as('register')
       register()
       cy.wait('@register').then(() => {
         expect(routerPushStub).to.calledWith('/profile')
@@ -142,28 +149,56 @@ describe('RegisterForm', () => {
     })
 
     it('with exist email: show alert', () => {
-      cy.route({status: 422, response: {errors: {email: 'These email already taken'}}}).as('register')
+      cy.intercept(
+        'POST',
+        '/api/auth/register',
+        {
+          statusCode: 422,
+          body: {errors: {email: 'These email already taken'}}
+        }
+      ).as('register')
       register()
       cy.wait('@register')
       cy.contains('[data-cy="register-alert"]', 'These email already taken')
     })
 
     it('show alert when occurred internal api error', () => {
-      cy.route({status: 500, response: {}}).as('register')
+      cy.intercept(
+        'POST',
+        '/api/auth/register',
+        {
+          statusCode: 500,
+          body: {}
+        }
+      ).as('register')
       register()
       cy.wait('@register')
       cy.contains('[data-cy="register-alert"]', 'Internal error')
     })
 
     it('disable register button and have spinner', () => {
-      cy.route({response})
+      cy.intercept(
+        'POST',
+        '/api/auth/register',
+        {
+          statusCode: 200,
+          body: response
+        }
+      ).as('register')
       register()
       cy.get(registerButton).should('have.attr', 'disabled')
       cy.get(registerButton + ' [data-cy="register-spinner"]')
     })
 
     it('enable register button and hide spinner when login failed', () => {
-      cy.route({status: 401, response: {}}).as('register')
+      cy.intercept(
+        'POST',
+        '/api/auth/register',
+        {
+          statusCode: 401,
+          body: {}
+        }
+      ).as('register')
       register()
       cy.wait('@register')
       cy.get(registerButton).should('not.have.attr', 'disabled')

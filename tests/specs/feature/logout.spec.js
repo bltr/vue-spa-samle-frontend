@@ -1,12 +1,15 @@
 describe('logout', () => {
   it('logout and redirect to "/"', () => {
     cy.LOGIN()
-    cy.server()
-    cy.route({
-      method: 'POST',
-      url: '/api/auth/logout',
-      response: {}
-    }).as('logout')
+    cy.INTERCEPT(
+      'POST',
+      '/api/auth/logout',
+      {
+        statusCode: 200,
+        body: {}
+      },
+      'logout'
+    )
 
     cy.visit('/')
     cy.contains('button[data-cy="logout-button"]', 'logout')

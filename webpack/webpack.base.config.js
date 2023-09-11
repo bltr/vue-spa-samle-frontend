@@ -66,9 +66,11 @@ module.exports = {
       template: 'src/pages/index.html',
       excludeChunks: ['test']
     }),
-    new CopyWebpackPlugin([
-      {from: 'src/assets'},
-    ]),
+    new CopyWebpackPlugin({
+      patterns: [
+        {from: 'src/assets'}
+      ],
+    }),
     new VueLoaderPlugin(),
   ]
 }
