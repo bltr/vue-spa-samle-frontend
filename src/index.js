@@ -1,13 +1,10 @@
-import '@/scss'
-import Vue from 'vue'
+import './scss/index.scss'
+import {createApp} from 'vue'
 import router from "@/js/router"
 import store from "@/js/store";
 import App from "@/components/App";
 
-const app = new Vue({
-  router,
-  store,
-  name: 'app',
-  render: h => h(App),
-  el: '#app'
-});
+const app = createApp(App)
+app.use(router)
+app.use(store)
+app.mount('#app')

@@ -1,21 +1,18 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
 import store from '@/js/store'
 import Home from '@/components/HomeView'
 import Profile from '@/components/profile/ProfileView'
 
-Vue.use(Router)
-
-const router = new Router({
+const router = createRouter({
   linkExactActiveClass: 'disabled',
-  mode: 'history',
+  history: createWebHistory(),
   routes: [
     {
       path: '/',
       component: Home,
     },
     {
-      path: '*',
+      path: '/:pathMatch(.*)*',
       redirect: '/',
     },
 

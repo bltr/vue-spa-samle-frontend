@@ -57,7 +57,7 @@ module.exports = {
     extensions: ['.wasm', '.mjs', '.js', '.json', '.vue', '.scss'],
     alias: {
       "@": path.resolve(__dirname, "../src/"),
-      vue$: "vue/dist/vue.runtime.esm.js"
+      vue$: 'vue/dist/vue.esm-bundler.js',
     }
   },
 
